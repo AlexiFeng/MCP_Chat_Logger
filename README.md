@@ -1,91 +1,104 @@
 # MCP Chat Logger
 
-[![smithery badge](https://smithery.ai/badge/@AlexiFeng/MCP_Chat_Logger)](https://smithery.ai/server/@AlexiFeng/MCP_Chat_Logger)
+[![Smithery](https://smithery.ai/badge/@AlexiFeng/MCP_Chat_Logger)](https://smithery.ai/server/@AlexiFeng/MCP_Chat_Logger)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-<div align="center">
-  <a href="README_zh.md">中文</a> | <a href="README_en.md">English</a>
-</div>
+[Chinese documentation / 中文文档](README_zh.md)
 
----
+MCP Chat Logger is a small [Model Context Protocol](https://modelcontextprotocol.io/) server that lets an AI client save a conversation as a readable Markdown file.
 
-MCP Chat Logger是一个简单而强大的聊天记录保存工具，可以将聊天历史保存为Markdown格式文件，便于后续查看和分享。
+## What it does
 
-## 功能特点
+- Exposes a `save_chat_history` MCP tool
+- Writes messages, roles, and timestamps to Markdown
+- Uses an optional conversation ID in the filename and document header
+- Stores logs locally in the `chat_logs/` directory
 
-- 支持大模型调用工具将聊天历史保存为格式化的Markdown文件
-- 自动为每条消息添加时间戳
-- 自定义保存目录
-- 支持会话ID标识不同的对话
-  
-## 下一阶段
-添加Overview功能
+## Requirements
 
-### 安装步骤
+- Python 3.10 or newer
+- [uv](https://docs.astral.sh/uv/)
+- An MCP-compatible client
 
-#### Installing via Smithery
+## Quick start
 
-To install MCP Chat Logger for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@AlexiFeng/MCP_Chat_Logger):
+Clone the repository and install the locked dependencies:
+
+```bash
+git clone https://github.com/AlexiFeng/MCP_Chat_Logger.git
+cd MCP_Chat_Logger
+uv sync
+```
+
+Start the server over stdio:
+
+```bash
+uv run chat_logger.py
+```
+
+## Client configuration
+
+Use an absolute path to your clone. A typical MCP client configuration looks like this:
+
+```json
+{
+  "mcpServers": {
+    "chat_logger": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/absolute/path/to/MCP_Chat_Logger",
+        "run",
+        "chat_logger.py"
+      ]
+    }
+  }
+}
+```
+
+The outer configuration shape can differ between clients; the `command` and `args` values remain the same.
+
+## Tool input
+
+`save_chat_history` accepts:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `messages` | array | Yes | Chat messages containing `role` and `content` fields |
+| `conversation_id` | string | No | Identifier added to the output filename and document header |
+
+Example message list:
+
+```json
+[
+  {"role": "user", "content": "Summarize this experiment."},
+  {"role": "assistant", "content": "Here are the main findings..."}
+]
+```
+
+Generated files are written to `chat_logs/chat_<timestamp>.md`, or `chat_logs/chat_<conversation_id>_<timestamp>.md` when an ID is supplied.
+
+## Install with Smithery
+
+For clients supported by Smithery:
 
 ```bash
 npx -y @smithery/cli install @AlexiFeng/MCP_Chat_Logger --client claude
 ```
 
-1. 克隆这个代码库：
+## Privacy
+
+Conversation logs are written to the machine running this server. Review the content before sharing or committing generated files. The `chat_logs/` directory is excluded from Git by default.
+
+## Development
 
 ```bash
-git clone https://github.com/yourusername/MCP_Chat_Logger.git
-cd MCP_Chat_Logger
+uv sync
+uv run python -m compileall chat_logger.py
 ```
 
-2. 安装依赖：
-提前安装uv
+Issues and pull requests are welcome.
 
-```bash
-uv add "mcp[cli]"
-```
+## License
 
-## 使用方法
-
-1. 在项目目录启动mcp服务
-```bash
-uv run chat_logger.py
-```
-
-2. 在cursor/cherry studio中添加mcp服务器配置
-"chat_logger": {
-      "name": "chat_logger",
-      "isActive": false,
-      "command": "uv",
-      "args": [
-        "--directory",
-        "项目路径（例如~/MCP_Chat_Logger/）",
-        "run",
-        "chat_logger.py"
-      ]
-    }
-
-## 项目结构
-
-```
-MCP_Chat_Logger/
-├── chat_logger.py      # 核心功能实现
-├── chat_logs/          # 默认保存目录
-├── README.md           # 项目说明
-├── README_zh.md        # 中文说明
-├── README_en.md        # 英文说明
-└── .gitignore          # Git忽略文件
-```
-
-## 贡献指南
-
-欢迎提交问题和拉取请求！如果您想贡献代码，请遵循以下步骤：
-
-1. Fork这个仓库
-2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启一个Pull Request
-
-## 许可证
-
-该项目采用MIT许可证 - 详情请查看 LICENSE 文件。
+[MIT](LICENSE)

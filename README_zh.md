@@ -1,73 +1,64 @@
 # MCP Chat Logger
 
-MCP Chat Logger是一个简单而强大的聊天记录保存工具，可以将聊天历史保存为Markdown格式文件，便于后续查看和分享。
+[English](README.md)
 
-## 功能特点
+MCP Chat Logger 是一个小型 [Model Context Protocol](https://modelcontextprotocol.io/) 服务器，让 AI 客户端可以将对话保存为易于阅读的 Markdown 文件。
 
-- 支持大模型调用工具将聊天历史保存为格式化的Markdown文件
-- 自动为每条消息添加时间戳
-- 自定义保存目录
-- 支持会话ID标识不同的对话
-  
-## 下一阶段
-添加Overview功能
+## 功能
 
-### 安装步骤
+- 提供 `save_chat_history` MCP 工具
+- 将消息、角色和时间戳写入 Markdown
+- 支持可选的会话 ID
+- 日志仅保存在本地 `chat_logs/` 目录
 
-1. 克隆这个代码库：
+## 环境要求
+
+- Python 3.10 或更高版本
+- [uv](https://docs.astral.sh/uv/)
+- 支持 MCP 的客户端
+
+## 快速开始
 
 ```bash
-git clone https://github.com/yourusername/MCP_Chat_Logger.git
+git clone https://github.com/AlexiFeng/MCP_Chat_Logger.git
 cd MCP_Chat_Logger
-```
-
-2. 安装依赖：
-提前安装uv
-
-```bash
-uv add "mcp[cli]"
-```
-
-## 使用方法
-
-1. 在项目目录启动mcp服务
-```bash
+uv sync
 uv run chat_logger.py
 ```
 
-2. 在cursor/cherry studio中添加mcp服务器配置
-"chat_logger": {
-      "name": "chat_logger",
-      "isActive": false,
+## 客户端配置
+
+将下面的路径替换为仓库的绝对路径：
+
+```json
+{
+  "mcpServers": {
+    "chat_logger": {
       "command": "uv",
       "args": [
         "--directory",
-        "项目路径（例如~/MCP_Chat_Logger/）",
+        "/absolute/path/to/MCP_Chat_Logger",
         "run",
         "chat_logger.py"
       ]
     }
-
-## 项目结构
-
-```
-MCP_Chat_Logger/
-├── chat_logger.py      # 核心功能实现
-├── chat_logs/          # 默认保存目录
-├── README.md           # 项目说明
-└── .gitignore          # Git忽略文件
+  }
+}
 ```
 
-## 贡献指南
+`save_chat_history` 接收消息数组和可选的 `conversation_id`。生成的文件保存为 `chat_logs/chat_<timestamp>.md`；提供会话 ID 时，文件名为 `chat_logs/chat_<conversation_id>_<timestamp>.md`。
 
-欢迎提交问题和拉取请求！如果您想贡献代码，请遵循以下步骤：
+## 隐私
 
-1. Fork这个仓库
-2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启一个Pull Request
+对话记录保存在运行此服务器的设备上。分享或提交文件前请检查其内容。`chat_logs/` 默认已加入 Git 忽略列表。
+
+## 开发检查
+
+```bash
+uv sync
+uv run python -m compileall chat_logger.py
+```
 
 ## 许可证
 
-该项目采用MIT许可证 - 详情请查看 LICENSE 文件。 
+[MIT](LICENSE)

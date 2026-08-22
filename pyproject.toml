@@ -1,7 +1,7 @@
 [project]
 name = "mcp-chat-logger"
 version = "0.1.0"
-description = "Add your description here"
+description = "An MCP server that saves AI conversations as structured Markdown files"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
