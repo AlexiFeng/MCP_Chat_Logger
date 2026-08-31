@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/alexifeng-mcp-chat-logger-badge.png)](https://mseep.ai/app/alexifeng-mcp-chat-logger)
+
 # MCP Chat Logger
 
 [![Smithery](https://smithery.ai/badge/@AlexiFeng/MCP_Chat_Logger)](https://smithery.ai/server/@AlexiFeng/MCP_Chat_Logger)
